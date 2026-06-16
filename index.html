@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hamim Shop Affiliate</title>
+
+<style>
+body{
+font-family:Arial,sans-serif;
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+padding:20px;
+color:white;
+}
+
+h1{
+text-align:center;
+color:#00ffd5;
+text-shadow:0 0 10px #00ffd5;
+margin-bottom:20px;
+}
+
+button{
+padding:12px;
+margin:6px;
+border:none;
+border-radius:10px;
+cursor:pointer;
+font-weight:bold;
+transition:0.3s;
+}
+
+button:hover{
+transform:scale(1.05);
+}
+
+.member{
+display:block;
+width:100%;
+max-width:320px;
+margin:10px auto;
+background:linear-gradient(45deg,#ff6a00,#ee0979);
+color:white;
+box-shadow:0 0 10px rgba(0,0,0,0.4);
+}
+
+.member:hover{
+box-shadow:0 0 20px #ff6a00;
+}
+
+#teamBtn{
+background:#00ffd5;
+color:black;
+width:100%;
+max-width:320px;
+display:block;
+margin:10px auto;
+}
+
+.box{
+background:rgba(255,255,255,0.1);
+backdrop-filter:blur(10px);
+padding:15px;
+border-radius:15px;
+margin-top:15px;
+box-shadow:0 0 15px rgba(0,0,0,0.3);
+}
+
+input{
+width:100%;
+padding:10px;
+margin:6px 0;
+border:none;
+border-radius:8px;
+outline:none;
+}
+
+.hidden{display:none}
+
+h2,h3{
+color:#00ffd5;
+}
+</style>
+</head>
+
+<body>
+
+<h1>💎 𝐇𝐚𝐦𝐢𝐦 𝐒𝐡𝐨𝐩 𝐀𝐟𝐟𝐢𝐥𝐢𝐚𝐭𝐞 💎</h1>
+
+<div id="home"></div>
+
+<button id="teamBtn" onclick="teamLogin()">🔥 TEAM PANEL</button>
+
+<div id="panel" class="hidden box"></div>
+
+<script>
+
+// ---------------- MEMBERS DATA ----------------
+let members = {};
+
+for(let i=1;i<=10;i++){
+let d = JSON.parse(localStorage.getItem("member"+i) || "null");
+
+members[i] = d || {
+name:"",
+whatsapp:"",
+balance:"0",
+password:"limonttcmg"
+};
+}
+
+// ---------------- HOME BUTTONS ----------------
+const home = document.getElementById("home");
+
+for(let i=1;i<=10;i++){
+let b = document.createElement("button");
+b.className = "member";
+b.innerText = "👤 MEMBER " + i;
+b.onclick = () => login(i);
+home.appendChild(b);
+}
+
+// ---------------- SAVE ----------------
+function save(id){
+localStorage.setItem("member"+id, JSON.stringify(members[id]));
+}
+
+// ---------------- LOGIN ----------------
+function login(id){
+
+let p = prompt("🔐 Password দিন");
+
+if(p !== members[id].password){
+alert("❌ ভুল পাসওয়ার্ড");
+return;
+}
+
+document.getElementById("panel").classList.remove("hidden");
+
+document.getElementById("panel").innerHTML = `
+<h2>👋 Welcome</h2>
+
+<p><b>👤 Name:</b> ${members[id].name || "Not set"}</p>
+<p><b>📱 WhatsApp:</b> ${members[id].whatsapp || "Not set"}</p>
+<p><b>💰 Balance:</b> ${members[id].balance}</p>
+
+<input id="newpass" placeholder="🔑 নতুন পাসওয়ার্ড">
+
+<button style="background:#00ffd5;color:black" onclick="changePass(${id})">
+🔄 Change Password
+</button>
+
+<br><br>
+
+<button style="background:#ff6a00;color:white" onclick="withdraw(${id})">
+💸 Withdraw
+</button>
+`;
+}
+
+// ---------------- PASSWORD CHANGE ----------------
+function changePass(id){
+
+let np = document.getElementById("newpass").value;
+
+if(!np){
+alert("পাসওয়ার্ড লিখুন");
+return;
+}
+
+members[id].password = np;
+save(id);
+
+alert("✅ পাসওয়ার্ড পরিবর্তন হয়েছে");
+}
+
+// ---------------- WITHDRAW ----------------
+function withdraw(id){
+
+document.getElementById("panel").innerHTML = `
+<h3>💸 Withdraw Panel</h3>
+
+<input placeholder="📱 নাম্বার">
+<input placeholder="💰 পরিমান">
+<input placeholder="💳 মেথড">
+
+<button style="background:#00ffd5;color:black" onclick="alert('🎉 সফল হয়েছে')">
+OK
+</button>
+`;
+}
+
+// ---------------- TEAM LOGIN ----------------
+function teamLogin(){
+
+let p = prompt("🔐 TEAM Password");
+
+if(p !== "ttcm"){
+alert("❌ ভুল পাসওয়ার্ড");
+return;
+}
+
+let h = "<h2>🔥 TEAM PANEL</h2>";
+
+for(let i=1;i<=10;i++){
+
+h += `
+<div class="box">
+
+<h3>👤 Member ${i}</h3>
+
+<input id="n${i}" value="${members[i].name}" placeholder="Name">
+<input id="w${i}" value="${members[i].whatsapp}" placeholder="WhatsApp">
+<input id="b${i}" value="${members[i].balance}" placeholder="Balance">
+
+<button style="background:#00ffd5;color:black" onclick="updateMember(${i})">
+💾 Save
+</button>
+
+</div>
+`;
+}
+
+document.getElementById("panel").classList.remove("hidden");
+document.getElementById("panel").innerHTML = h;
+}
+
+// ---------------- UPDATE MEMBER ----------------
+function updateMember(i){
+
+members[i].name = document.getElementById("n"+i).value;
+members[i].whatsapp = document.getElementById("w"+i).value;
+members[i].balance = document.getElementById("b"+i).value;
+
+save(i);
+
+alert("✅ Save হয়েছে");
+}
+
+</script>
+
+</body>
+  </html>
